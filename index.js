@@ -2,49 +2,20 @@
 /* eslint-disable  no-console */
 
 const Alexa = require('ask-sdk-core');
+const dataSource = require('./lib/data');
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
-  handle(handlerInput) {
-    const speechText = 'Welcome to the Alexa Skills Kit, you can say hello!';
+  async handle(handlerInput) {
+    const data = await dataSource.loadResponses();
 
+    const speechText = data.Welcome.message;
+    const repromtText = data.Welcome.reprompt;
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(speechText)
-      .withSimpleCard('Hello World', speechText)
-      .getResponse();
-  },
-};
-
-const HelloWorldIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'HelloWorldIntent';
-  },
-  handle(handlerInput) {
-    const speechText = 'Hello World!';
-
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
-      .getResponse();
-  },
-};
-
-
-const NewInIntentHandler = {
-  canHandle(handlerInput) {
-    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
-      && handlerInput.requestEnvelope.request.intent.name === 'NewInIntent';
-  },
-  handle(handlerInput) {
-    const speechText = 'These are the new things in the radar';
-
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .reprompt(repromtText)
       .getResponse();
   },
 };
@@ -54,28 +25,71 @@ const WhatInIntentHandler = {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
       && handlerInput.requestEnvelope.request.intent.name === 'WhatInIntent';
   },
-  handle(handlerInput) {
-    const speechText = 'Tech radar something';
+  async handle(handlerInput) {
 
+    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const quadrant = slots.Quadrant.value;
+    const ring = slots.Ring.value;
+
+    const data = await dataSource.loadBlips();
+    console.log(`Filtering ${quadrant} and ${ring}`);
+    let filteredData = data.filter((row)=> {
+      return (row.quadrant === quadrant && row.ring === ring);
+    });
+
+    if(filteredData.length > 0){
+      speechText = `${filteredData[0].title} is in ${ring} <break time="1.5s"/> ${filteredData[0].lead}`;
+    } else {
+      speechText = `there are currently no ${quadrant} in ${ring}`;
+    }
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
       .getResponse();
   },
 };
+
+
+const WhatThemesIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'WhatThemesIntent';
+  },
+  async handle(handlerInput) {
+
+    const data = await dataSource.loadThemes();
+    let speech = [];
+    let speechText = "";
+    data.forEach((theme)=> {
+      speech.push(theme.title + '<break time="1s"/>');
+      speech.push(theme.lead + '<break time="1.5s"/>' );
+    });
+
+    if(speech.length > 0){
+      speechText = speech.join(' ');
+    } else {
+      speechText = `there are no themes found`;
+    }
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .getResponse();
+  },
+};
+
 
 const HelpIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
       && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
   },
-  handle(handlerInput) {
-    const speechText = 'You can say hello to me!';
+  async handle(handlerInput) {
+    const data = await dataSource.loadResponses();
+
+    const speechText = data.Help.message;
+    const repromptText = data.Help.reprompt;
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(speechText)
-      .withSimpleCard('Hello World', speechText)
+      .reprompt(repromptText)
       .getResponse();
   },
 };
@@ -87,11 +101,11 @@ const CancelAndStopIntentHandler = {
         || handlerInput.requestEnvelope.request.intent.name === 'AMAZON.StopIntent');
   },
   handle(handlerInput) {
+
     const speechText = 'Goodbye!';
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard('Hello World', speechText)
       .getResponse();
   },
 };
@@ -126,9 +140,8 @@ const skillBuilder = Alexa.SkillBuilders.custom();
 exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
-    HelloWorldIntentHandler,
-    NewInIntentHandler,
     WhatInIntentHandler,
+    WhatThemesIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler

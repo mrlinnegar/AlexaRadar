@@ -19,7 +19,7 @@ service: radar
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
 
 # you can overwrite defaults here
 #  stage: dev
@@ -42,8 +42,8 @@ provider:
 #            - "/*"
 
 # you can define service wide environment variables here
-#  environment:
-#    variable1: value1
+  environment:
+    SHEET_TOKEN: ${env:SHEET_TOKEN}
 
 # you can add packaging information here
 #package:
