@@ -9,10 +9,16 @@ const LaunchRequestHandler = {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   async handle(handlerInput) {
-    const data = await dataSource.loadResponses();
+    let speechText, repromtText = "";
+    try {
+      const data = await dataSource.loadResponses();
+      speechText = data.Welcome.message;
+      repromtText = data.Welcome.reprompt;
+    } catch (e) {
+      speechText = "Welcome to the Thoughtworks Tech Radar";
+      repromtText = "You can ask about themes, or what tools are in assess";
+    }
 
-    const speechText = data.Welcome.message;
-    const repromtText = data.Welcome.reprompt;
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(repromtText)
@@ -38,10 +44,11 @@ const WhatInIntentHandler = {
     });
 
     if(filteredData.length > 0){
-      speechText = `${filteredData[0].title} is in ${ring} <break time="1.5s"/> ${filteredData[0].lead}`;
+      speechText = `${filteredData[0].title} is in ${ring} <break time="1s"/> ${filteredData[0].lead}`;
     } else {
       speechText = `there are currently no ${quadrant} in ${ring}`;
     }
+
     return handlerInput.responseBuilder
       .speak(speechText)
       .getResponse();
