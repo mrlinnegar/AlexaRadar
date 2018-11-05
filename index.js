@@ -33,9 +33,9 @@ const WhatInIntentHandler = {
   },
   async handle(handlerInput) {
 
-    const slots = handlerInput.requestEnvelope.request.intent.slots;
+    const slots =    handlerInput.requestEnvelope.request.intent.slots;
     const quadrant = slots.Quadrant.value;
-    const ring = slots.Ring.value;
+    const ring =     slots.Ring.value;
 
     const data = await dataSource.loadBlips();
     console.log(`Filtering ${quadrant} and ${ring}`);
