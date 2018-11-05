@@ -104,17 +104,17 @@ const WhatIsTheRadarIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'WhatIsTheRadarIntent';
   },
   async handle(handlerInput) {
-    let speechText, repromtText = "";
+    let speechText = "";
     try {
       const data = await dataSource.loadResponses();
       speechText = data.WhatIsTheRadar.message;
-    } catch (e) {
+    } catch (error) {
       speechText = "The Thoughtworks Tech Radar";
+    } finally {
+      return handlerInput.responseBuilder
+        .speak(speechText)
+        .getResponse();
     }
-
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .getResponse();
   }
 };
 
