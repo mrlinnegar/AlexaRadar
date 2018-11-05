@@ -51,7 +51,7 @@ const WhatInIntentHandler = {
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .repromtText("Would you like to know more?")
+      .reprompt("Would you like to know more?")
       .withShouldEndSession(false)
       .getResponse();
   },
