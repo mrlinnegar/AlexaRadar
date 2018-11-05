@@ -168,6 +168,7 @@ const ErrorHandler = {
     return true;
   },
   handle(handlerInput, error) {
+    console.log(handlerInput);
     console.log(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
