@@ -36,6 +36,7 @@ const WhatInIntentHandler = {
     const slots =    handlerInput.requestEnvelope.request.intent.slots;
     const quadrant = slots.Quadrant.value;
     const ring =     slots.Ring.value;
+    let speechText = "";
 
     const data = await dataSource.loadBlips();
     console.log(`Filtering ${quadrant} and ${ring}`);
@@ -44,7 +45,7 @@ const WhatInIntentHandler = {
     });
 
     if(filteredData.length > 0){
-      speechText = `${filteredData[0].title} is in ${ring} <break time="1s"/> ${filteredData[0].lead}`;
+      speechText = `${filteredData[0].title} is in ${ring} <break time="1s"/> ${filteredData[0].lead}<break time="2s"/>`;
     } else {
       speechText = `there are currently no ${quadrant} in ${ring}`;
     }
@@ -83,6 +84,22 @@ const WhatThemesIntentHandler = {
       .getResponse();
   },
 };
+
+const BlipInformationIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'BlipInformationIntent';
+  },
+  handle(handlerInput){
+    const slots =  handlerInput.requestEnvelope.request.intent.slots;
+    const blip = slots.Blip.value;
+
+    return handlerInput.responseBuilder
+      .speak(`I would love to tell you more about ${blip} however I cannot respond yet.`)
+      .getResponse();
+  }
+};
+
 
 const ExplainWhatIntentHander = {
   canHandle(handlerInput){
@@ -187,6 +204,7 @@ exports.handler = skillBuilder
     LaunchRequestHandler,
     WhatInIntentHandler,
     ExplainWhatIntentHander,
+    BlipInformationIntentHandler,
     WhatIsTheRadarIntentHandler,
     WhatThemesIntentHandler,
     HelpIntentHandler,
