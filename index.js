@@ -67,8 +67,8 @@ const WhatThemesIntentHandler = {
     let speech = [];
     let speechText = "";
     data.forEach((theme)=> {
-      speech.push(theme.title + '<break time="1s"/>');
-      speech.push(theme.lead + '<break time="1.5s"/>' );
+      speech.push( theme.title + '<break time="1s"/>' );
+      speech.push( theme.lead + '<break time="1.5s"/>' );
     });
 
     if(speech.length > 0){
@@ -94,6 +94,26 @@ const ExplainWhatIntentHander = {
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(repromptText)
+      .getResponse();
+  }
+};
+
+const WhatIsTheRadarIntentHandler = {
+  canHandle(handlerInput){
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'WhatIsTheRadarIntent';
+  },
+  async handle(handlerInput) {
+    let speechText, repromtText = "";
+    try {
+      const data = await dataSource.loadResponses();
+      speechText = data.WhatIsTheRadar.message;
+    } catch (e) {
+      speechText = "The Thoughtworks Tech Radar";
+    }
+
+    return handlerInput.responseBuilder
+      .speak(speechText)
       .getResponse();
   }
 };
@@ -164,6 +184,7 @@ exports.handler = skillBuilder
     LaunchRequestHandler,
     WhatInIntentHandler,
     ExplainWhatIntentHander,
+    WhatIsTheRadarIntentHandler,
     WhatThemesIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
