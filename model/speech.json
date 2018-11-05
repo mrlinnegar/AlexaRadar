@@ -1,0 +1,129 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "tech radar",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "WhatInIntent",
+                    "slots": [
+                        {
+                            "name": "Ring",
+                            "type": "Rings"
+                        },
+                        {
+                            "name": "Quadrant",
+                            "type": "Quadrant"
+                        }
+                    ],
+                    "samples": [
+                        "what should we {Ring} in {Quadrant}",
+                        "what {Quadrant} is in {Ring}",
+                        "what {Quadrant} should I {Ring}",
+                        "what should I {Ring} in {Quadrant}",
+                        "what is in {Ring} in {Quadrant}"
+                    ]
+                },
+                {
+                    "name": "ExplainWhatIntent",
+                    "slots": [
+                        {
+                            "name": "Options",
+                            "type": "Options"
+                        }
+                    ],
+                    "samples": [
+                        "what does {Options} mean",
+                        "what are the {Options}"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "Quadrant",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Languages and Frameworks"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Platforms"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Tools"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Techniques"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Rings",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Assess"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Hold"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Trial"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Adopt"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Options",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "Quadrants"
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "Rings"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}

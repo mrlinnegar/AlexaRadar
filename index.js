@@ -75,6 +75,21 @@ const WhatThemesIntentHandler = {
   },
 };
 
+const ExplainWhatIntentHander = {
+  canHandle(handlerInput){
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'ExplainWhatIntent';
+  },
+  handle(handlerInput){
+    const speechText = "Hello World";
+    const responseText = "Hello Hello World";
+
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .reprompt(repromptText)
+      .getResponse();
+  }
+};
 
 const HelpIntentHandler = {
   canHandle(handlerInput) {
@@ -141,6 +156,7 @@ exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     WhatInIntentHandler,
+    ExplainWhatIntentHander,
     WhatThemesIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
