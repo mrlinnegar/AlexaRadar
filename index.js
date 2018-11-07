@@ -17,7 +17,8 @@ const LaunchRequestHandler = {
   async handle(handlerInput) {
     let speechText, repromtText = "";
     try {
-      const data = await dataSource.loadResponses();
+      let responses = new Responses(db);
+      const data = await responses.all();
       speechText = data.Welcome.message;
       repromtText = data.Welcome.reprompt;
     } catch (e) {
@@ -198,7 +199,7 @@ const ErrorHandler = {
     return true;
   },
   handle(handlerInput, error) {
-    console.log(handlerInput);
+    console.log(error);
     console.log(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
