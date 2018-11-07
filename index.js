@@ -2,7 +2,13 @@
 /* eslint-disable  no-console */
 
 const Alexa = require('ask-sdk-core');
-const dataSource = require('./lib/data');
+
+const Spreadsheet = require("./lib/Spreadsheet");
+const Blips = require("./lib/Blips");
+const Themes = require("./lib/Themes");
+const Responses = require("./lib/Responses");
+
+const db = new Spreadsheet();
 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
@@ -37,8 +43,10 @@ const WhatInIntentHandler = {
     const quadrant = slots.Quadrant.value;
     const ring =     slots.Ring.value;
     let speechText = "";
+    let blips = new Blips(db);
 
-    const data = await dataSource.loadBlips();
+    const data = await blips.all();
+
     console.log(`Filtering ${quadrant} and ${ring}`);
     let filteredData = data.filter((row)=> {
       return (row.quadrant === quadrant && row.ring === ring);
@@ -65,10 +73,11 @@ const WhatThemesIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'WhatThemesIntent';
   },
   async handle(handlerInput) {
-
-    const data = await dataSource.loadThemes();
+    let themes = new Themes(db);
+    const data = await themes.all();
     let speech = [];
     let speechText = "";
+
     data.forEach((theme)=> {
       speech.push( theme.title + '<break time="1s"/>' );
       speech.push( theme.lead + '<break time="1.5s"/>' );
@@ -125,7 +134,8 @@ const WhatIsTheRadarIntentHandler = {
   async handle(handlerInput) {
     let speechText = "";
     try {
-      const data = await dataSource.loadResponses();
+      let responses = new Responses(db);
+      const data = await responses.all();
       speechText = data.WhatIsTheRadar.message;
     } catch (error) {
       speechText = "The Thoughtworks Tech Radar";
@@ -143,7 +153,8 @@ const HelpIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
   },
   async handle(handlerInput) {
-    const data = await dataSource.loadResponses();
+    let responses = new Responses(db);
+    const data = await responses.all();
 
     const speechText = data.Help.message;
     const repromptText = data.Help.reprompt;
