@@ -4,9 +4,10 @@
 const Alexa = require('ask-sdk-core');
 
 const Spreadsheet = require("./lib/Spreadsheet");
-const Blips = require("./lib/Blips");
-const Themes = require("./lib/Themes");
-const Responses = require("./lib/Responses");
+
+const Blips = require("./lib/models/Blips");
+const Themes = require("./lib/models/Themes");
+const Responses = require("./lib/models/Responses");
 
 const db = new Spreadsheet();
 
@@ -43,17 +44,13 @@ const WhatInIntentHandler = {
     const slots =    handlerInput.requestEnvelope.request.intent.slots;
     const quadrant = slots.Quadrant.value;
     const ring =     slots.Ring.value;
+
     let speechText = "";
     let blips = new Blips(db);
+    const search = { quadrant, ring };
+    const data = await blips.find(search);
 
-    const data = await blips.all();
-
-    console.log(`Filtering ${quadrant} and ${ring}`);
-    let filteredData = data.filter((row)=> {
-      return (row.quadrant === quadrant && row.ring === ring);
-    });
-
-    if(filteredData.length > 0){
+    if(data.length > 0){
       speechText = `${filteredData[0].title} is in ${ring} <break time="1s"/> ${filteredData[0].lead}<break time="2s"/>`;
     } else {
       speechText = `there are currently no ${quadrant} in ${ring}`;
