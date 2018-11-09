@@ -41,7 +41,7 @@ describe("Blips", function() {
       it("should be case insensitive", ()=> {
         let subject = { "name": "James"};
         let filter = { "name" : "james"};
-        expect(blips.match(subject, filter)).to.be.false;
+        expect(blips.match(subject, filter)).to.be.true;
       });
 
       it("should return false if a subject property is undefined", ()=> {
