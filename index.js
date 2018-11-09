@@ -110,7 +110,7 @@ const BlipInformationIntentHandler = {
     if(blips.length === 0){
       speechText = `I would love to tell you more about ${name}, however I cannot find anything in my database.`;
     } else {
-      speechText = `${blips[0].title} is in ${blips[0].ring} <break time="1s"/> ${blips[0].lead}`;
+      speechText = `${blips[0].name} is in ${blips[0].ring} <break time="1s"/> ${blips[0].lead}`;
     }
 
     return handlerInput.responseBuilder
