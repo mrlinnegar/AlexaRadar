@@ -59,24 +59,12 @@ const WhatInIntentHandler = {
                     ].join('');
     }
 
-    return new Promise((resolve, reject) => {
-      handlerInput.attributesManager.getSessionAttributes()
-        .then((attributes) => {
-          attributes.foo = 'bar';
-          handlerInput.attributesManager.setSessionAttributes(attributes);
-          return handlerInput.attributesManager.saveSessionAttributes();
-        })
-        .then(() => {
-          resolve(handlerInput.responseBuilder
+    return handlerInput.responseBuilder
             .speak(speechText)
             .reprompt("Would you like to know more?")
             .withShouldEndSession(false)
-            .getResponse());
-        })
-        .catch((error) => {
-          reject(error);
-        });
-    });
+            .getResponse();
+
   },
 };
 
