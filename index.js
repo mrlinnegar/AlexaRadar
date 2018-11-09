@@ -104,7 +104,7 @@ const BlipInformationIntentHandler = {
   async handle(handlerInput){
     const slots =  handlerInput.requestEnvelope.request.intent.slots;
     const name = slots.Blip.value;
-    const blips = new Blip(db);
+    const blips = new Blips(db);
     const blip = await blips.find({ name });
 
     if(blips.length === 0){
