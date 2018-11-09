@@ -55,7 +55,7 @@ const WhatInIntentHandler = {
       speechText = `there are currently no ${quadrant} in ${ring}`;
     } else {
       speechText = [`there are currently ${data.length} ${quadrant} in ${ring}. `,
-                    `${filteredData[0].title} is in ${ring} <break time="1s"/> ${filteredData[0].lead}`
+                    `${data[0].title} is in ${ring} <break time="1s"/> ${data[0].lead}`
                     ].join('');
     }
 
