@@ -34,6 +34,7 @@ const LaunchRequestHandler = {
   },
 };
 
+
 const WhatInIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -50,17 +51,32 @@ const WhatInIntentHandler = {
     const search = { quadrant, ring };
     const data = await blips.find(search);
 
-    if(data.length > 0){
-      speechText = `${filteredData[0].title} is in ${ring} <break time="1s"/> ${filteredData[0].lead}<break time="2s"/>`;
-    } else {
+    if(data.length === 0){
       speechText = `there are currently no ${quadrant} in ${ring}`;
+    } else {
+      speechText = [`there are currently ${data.length} ${quadrant} in ${ring}. `,
+                    `${filteredData[0].title} is in ${ring} <break time="1s"/> ${filteredData[0].lead}`
+                    ].join('');
     }
 
-    return handlerInput.responseBuilder
-      .speak(speechText)
-      .reprompt("Would you like to know more?")
-      .withShouldEndSession(false)
-      .getResponse();
+    return new Promise((resolve, reject) => {
+      handlerInput.attributesManager.getSessionAttributes()
+        .then((attributes) => {
+          attributes.foo = 'bar';
+          handlerInput.attributesManager.setSessionAttributes(attributes);
+          return handlerInput.attributesManager.saveSessionAttributes();
+        })
+        .then(() => {
+          resolve(handlerInput.responseBuilder
+            .speak(speechText)
+            .reprompt("Would you like to know more?")
+            .withShouldEndSession(false)
+            .getResponse());
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   },
 };
 
@@ -97,12 +113,20 @@ const BlipInformationIntentHandler = {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
       && handlerInput.requestEnvelope.request.intent.name === 'BlipInformationIntent';
   },
-  handle(handlerInput){
+  async handle(handlerInput){
     const slots =  handlerInput.requestEnvelope.request.intent.slots;
-    const blip = slots.Blip.value;
+    const name = slots.Blip.value;
+    const blips = new Blip(db);
+    const blip = await blips.find({ name });
+
+    if(blips.length === 0){
+      speechText = `I would love to tell you more about ${name}, however I cannot find anything in my database.`;
+    } else {
+      speechText = `${blips[0].title} is in ${blips[0].ring} <break time="1s"/> ${blips[0].lead}`;
+    }
 
     return handlerInput.responseBuilder
-      .speak(`I would love to tell you more about ${blip} however I cannot respond yet.`)
+      .speak(speechText)
       .getResponse();
   }
 };

@@ -11,7 +11,7 @@ const load = async ()=>{
   try {
     const quadrant = "tools";
     const ring = "assess";
-    const search = { quadrant, ring };
+    const search = { "name" : "Conduit" };
     let  blipData = await blips.find(search);
     console.log(blipData)
   } catch (e) {
