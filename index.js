@@ -59,7 +59,7 @@ const WhatInIntentHandler = {
       let responses = [`there are currently ${data.length} ${quadrant} in ${ring}. They are: `];
 
       data.forEach((blip)=> {
-        responses.push(`${blip.title}', `);
+        responses.push(`${blip.title}, `);
       });
       responses.push(". What would you like to know more about?");
 
