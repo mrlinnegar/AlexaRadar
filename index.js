@@ -86,7 +86,7 @@ const WhatThemesIntentHandler = {
     const data = await themes.all();
     let speech = [];
     let speechText = "";
-
+    speech.push("These are the themes in the latest radar. ")
     data.forEach((theme)=> {
       speech.push( theme.title + '<break time="1s"/>' );
       speech.push( theme.lead + '<break time="1.5s"/>' );
