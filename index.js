@@ -143,10 +143,35 @@ const NewIntentHandler = {
   },
   async handle(handlerInput){
     let speechText = "This is the new blip intent";
-    let repromptText = "This is the reprompt for new blip intent";
+    let search = '';
+    const slots =  handlerInput.requestEnvelope.request.intent.slots;
+
+    const quadrant = slots.Quadrant.value;
+    const ring = slots.Ring.value;
+
+    let filter = {
+      "new" : "TRUE"
+    };
+
+    if(quadrant) {
+      filter['quadrant'] = quadrant;
+      search = quadrant;
+    } else if(ring) {
+      filter['ring'] = quadrant;
+      search = quadrant;
+    }
+
+    const blips = new Blips(db);
+    const data = await blips.find(filter);
+
+    if(data.length === 0){
+      speechText = `there are currently no new blips in ${search}`;
+    } else {
+      speechText = `${data[0].title} is a new blip in ${search} <break time="1s"/> ${data[0].lead}`;
+    }
+
     return handlerInput.responseBuilder
       .speak(speechText)
-      .reprompt(repromptText)
       .getResponse();
   }
 };
