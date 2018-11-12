@@ -53,15 +53,22 @@ const WhatInIntentHandler = {
 
     if(data.length === 0){
       speechText = `there are currently no ${quadrant} in ${ring}`;
+    } else if(data.length === 1) {
+      speechText = `${data[0].title} is in ${ring} <break time="1s"/> ${data[0].lead}`;
     } else {
-      speechText = [`there are currently ${data.length} ${quadrant} in ${ring}. `,
-                    `${data[0].title} is in ${ring} <break time="1s"/> ${data[0].lead}`
-                    ].join('');
+      let responses = [`there are currently ${data.length} ${quadrant} in ${ring}. They are: `];
+
+      data.forEach((blip)=> {
+        responses.push(${blip.title}', ');
+      });
+      responses.push(". What would you like to know more about?");
+
+      speechText = .join(' ');
     }
 
     return handlerInput.responseBuilder
             .speak(speechText)
-            .reprompt("Would you like to know more?")
+            .reprompt(`You can say, 'Tell me about ${data[0].title}' for more information`)
             .withShouldEndSession(false)
             .getResponse();
 
