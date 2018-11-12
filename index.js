@@ -110,7 +110,7 @@ const BlipInformationIntentHandler = {
     if(data.length < 1){
       speechText = `I would love to tell you more about ${name}, however I cannot find anything in my database.`;
     } else {
-      speechText = `${data[0].name} is in ${data[0].ring} <break time="1s"/> ${data[0].lead}`;
+      speechText = `${data[0].name} is in ${data[0].ring}. <break time="1s"/> ${data[0].lead}`;
     }
 
     return handlerInput.responseBuilder
@@ -129,6 +129,21 @@ const ExplainWhatIntentHander = {
     const speechText = "Hello World";
     const responseText = "Hello Hello World";
 
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .reprompt(repromptText)
+      .getResponse();
+  }
+};
+
+const NewIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'NewIntent';
+  },
+  async handle(handlerInput){
+    let speechText = "This is the new blip intent";
+    let repromptText = "This is the reprompt for new blip intent";
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(repromptText)
@@ -212,7 +227,7 @@ const ErrorHandler = {
     console.log(`Error handled: ${error.message}`);
 
     return handlerInput.responseBuilder
-      .speak('Sorry, I can\'t understand the command. Please say again.')
+      .speak('I\'m sorry, my responses are limited. You must ask the right questions.')
       .reprompt('Sorry, I can\'t understand the command. Please say again.')
       .getResponse();
   },
@@ -226,6 +241,7 @@ exports.handler = skillBuilder
     WhatInIntentHandler,
     ExplainWhatIntentHander,
     BlipInformationIntentHandler,
+    NewIntentHandler,
     WhatIsTheRadarIntentHandler,
     WhatThemesIntentHandler,
     HelpIntentHandler,
