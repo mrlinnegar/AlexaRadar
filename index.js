@@ -63,7 +63,7 @@ const WhatInIntentHandler = {
       });
       responses.push(". What would you like to know more about?");
 
-      speechText = .join(' ');
+      speechText = responses.join(' ');
     }
 
     return handlerInput.responseBuilder
