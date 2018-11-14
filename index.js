@@ -109,16 +109,27 @@ const BlipInformationIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'BlipInformationIntent';
   },
   async handle(handlerInput){
-    const slots =  handlerInput.requestEnvelope.request.intent.slots;
-    const name = slots.Blip.value;
     const blips = new Blips(db);
-    const data = await blips.find({ name });
+    const slots =  handlerInput.requestEnvelope.request.intent.slots;
+    const spokenValue = slots.Blip.value;
 
-    if(data.length < 1){
-      speechText = `I would love to tell you more about ${name}, however I cannot find anything in my database.`;
+    let resolutions = slots.Blip.resolutions.resolutionsPerAuthority;
+
+    if(resolutions[0].status.code === "ER_SUCCESS_MATCH"){
+
+      const name = resolutions[0].values[0].value.name;
+      const data = await blips.find({ name });
+
+      if(data.length < 1){
+        speechText = `I would love to tell you more about ${spokenValue}, however I cannot find anything in my database.`;
+      } else {
+        speechText = `${data[0].name} is in ${data[0].ring}. <break time="1s"/> ${data[0].lead}`;
+      }
+
     } else {
-      speechText = `${data[0].name} is in ${data[0].ring}. <break time="1s"/> ${data[0].lead}`;
+        speechText = `I'm sorry, but I don't recognise ${spokenValue}.`;
     }
+
 
     return handlerInput.responseBuilder
       .speak(speechText)

@@ -16,8 +16,8 @@ radar.blips.forEach((blip)=> {
   let data = [];
   let pickedBlip = pick(blip, props);
   Object.keys(pickedBlip).forEach((k)=> {
-    let string = striptags(pickedBlip[k]).split('"').join('\\"');
-    data.push(`"${string}"`);
+    let string = striptags(pickedBlip[k]).replace(/,/g,'|');
+    data.push(string);
   })
   console.log(data.join(", "));
 });
