@@ -104,7 +104,9 @@ const WhatThemesIntentHandler = {
       .getResponse();
   },
 };
-
+function formatQuadrant(quadrant){
+  
+}
 const BlipInformationIntentHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'IntentRequest'
@@ -125,7 +127,7 @@ const BlipInformationIntentHandler = {
       if(data.length < 1){
         speechText = `I would love to tell you more about ${spokenValue}, however I cannot find anything in my database.`;
       } else {
-        speechText = `${data[0].name} is in ${data[0].ring}. <break time="1s"/> ${data[0].lead}`;
+        speechText = `${data[0].name} is a ${data[0].quadrant}, in ${data[0].ring}. <break time="1s"/> ${data[0].lead}`;
       }
 
     } else {
