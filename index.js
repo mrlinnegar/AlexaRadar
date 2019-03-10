@@ -105,7 +105,11 @@ const WhatThemesIntentHandler = {
   },
 };
 function formatQuadrant(quadrant){
-  
+  if(quadrant == "languages and frameworks"){
+    return "language or framework";
+  } else {
+    return quadrant.substr(0, quadrant.length -1 );
+  }
 }
 const BlipInformationIntentHandler = {
   canHandle(handlerInput) {
@@ -127,7 +131,8 @@ const BlipInformationIntentHandler = {
       if(data.length < 1){
         speechText = `I would love to tell you more about ${spokenValue}, however I cannot find anything in my database.`;
       } else {
-        speechText = `${data[0].name} is a ${data[0].quadrant}, in ${data[0].ring}. <break time="1s"/> ${data[0].lead}`;
+        let quadrant = formatQuadrant(data[0].quadrant);
+        speechText = `${data[0].name} is a ${quadrant}, in ${data[0].ring}. <break time="1s"/> ${data[0].lead}`;
       }
 
     } else {

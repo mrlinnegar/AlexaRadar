@@ -13,8 +13,8 @@ const load = async ()=>{
     const ring = "hold";
 
     const search = {
-    "quadrant": "tools",
-    "ring": "hold"
+    "quadrant": "languages and frameworks",
+    "ring": "assess"
 };
 //    const search = { quadrant, ring };
     let  data = await blips.find(search);
