@@ -50,15 +50,17 @@ const WhatInIntentHandler = {
     let blips = new Blips(db);
     const search = { quadrant, ring };
     const data = await blips.find(search);
-
-    if(data.length === 0){
+    console.log(data);
+    console.log(` found ${data.length} blips`);
+    if(data.length == 0){
       speechText = `there are currently no ${quadrant} in ${ring}`;
-    } else if(data.length === 1) {
+    } else if(data.length == 1) {
       speechText = `${data[0].title} is in ${ring} <break time="1s"/> ${data[0].lead}`;
     } else {
       let responses = [`there are currently ${data.length} ${quadrant} in ${ring}. They are: `];
 
       data.forEach((blip)=> {
+        console.log(blip);
         responses.push(`${blip.title}, `);
       });
       responses.push(". What would you like to know more about?");
